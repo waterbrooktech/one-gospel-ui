@@ -29,22 +29,22 @@
             <label :class="labelClass" for="name">
               Name
             </label>
-            <input :class="inputClass" id="name" type="text" placeholder="Name">
+            <input :class="inputClass" id="name" type="text" placeholder="Name" v-model="user.name">
           </div>
           <div class="mb-4">
             <label :class="labelClass" for="email">
               Email
             </label>
-            <input :class="inputClass" id="email" type="email" placeholder="email">
+            <input :class="inputClass" id="email" type="email" placeholder="email" v-model="user.email">
           </div>
           <div class="mb-4">
             <label :class="labelClass" for="phoneNumber">
               Phone Number
             </label>
-            <input :class="inputClass" id="phoneNumber" type="text" maxlength="11" placeholder="Phone Number">
+            <input :class="inputClass" id="phoneNumber" type="text" maxlength="11" placeholder="Phone Number" v-model="user.phoneNumber">
           </div>
           <div class="grid grid-cols-2 gap-x-4 mb-6">
-            <button class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline" type="button">
+            <button class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline" type="button" @click="registerUser">
               Sign Me Up
             </button>
             <button class="inline-block align-baseline font-bold text-sm text-slate-700 hover:text-slate-800" @click="setIsOpen(false)" type="button">
@@ -62,6 +62,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useStore } from 'vuex';
 
 import { DataLoading, PageHeader } from '@base';
 import { CentersList } from '@/components/centers';
@@ -71,10 +72,16 @@ import { getCenters } from '../services';
 const inputClass = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 const labelClass = 'block text-gray-700 text-sm font-bold mb-2';
 
+const { commit, getters } = useStore();
+
 const areas = ref([]);
 const centers = ref([]);
+const initialUser = getters.user.email ? { ...getters.user } : {};
 const isOpen = ref(false);
 const loading = ref(true);
+const user = ref(initialUser);
+
+console.log('getters.user => ', getters.user);
 
 const getAllCenters = async () => {
   const response = await getCenters();
@@ -94,6 +101,11 @@ const getAllCenters = async () => {
 
   areas.value = areaData;
   loading.value = false;
+};
+
+const registerUser = () => {
+  commit('setUserInfo', { ...user.value });
+  setIsOpen(false);
 };
 
 const setIsOpen = (value) => {
