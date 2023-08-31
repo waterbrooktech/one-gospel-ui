@@ -81,8 +81,6 @@ const isOpen = ref(false);
 const loading = ref(true);
 const user = ref(initialUser);
 
-console.log('getters.user => ', getters.user);
-
 const getAllCenters = async () => {
   const response = await getCenters();
   centers.value = response.data;
