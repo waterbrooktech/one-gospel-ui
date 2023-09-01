@@ -88,7 +88,6 @@ const submitting = ref(false);
 const user = ref(initialUser);
 
 const $toast = useToast();
-console.log('$toast => ', $toast);
 
 const getAllCenters = async () => {
   const response = await getCenters();
@@ -124,6 +123,8 @@ const registerUser = async () => {
     submitting.value = true;
     setIsOpen(false);
     $toast.success("You've been successfully registered.");
+
+    getAllCenters();
   } catch (e) {
     console.log('Error => ', e);
     submitting.value = false;
