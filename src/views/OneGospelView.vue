@@ -10,7 +10,7 @@
     <div v-if="loading" class="w-full flex justify-center p-20">
       <DataLoading />
     </div>
-    <centers-list :centers="areas" @click="setIsOpen(true)" />
+    <centers-list :centers="areas" @onSelect="handleCenterClick" />
 
     <div
       :class="[
@@ -24,7 +24,10 @@
         <p class="text-center text-gray-500 text-xs mb-4">
           Why do we need it? Good question, we&rsquo;d like to send you all the information you'll need to get there :)
         </p>
-        <form>
+        <div v-if="submitting" class="w-full flex justify-center p-20">
+          <DataLoading />
+        </div>
+        <form v-else>
           <div class="mb-4">
             <label :class="labelClass" for="name">
               Name
@@ -63,11 +66,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+import { useToast } from 'vue-toastification';
 
 import { DataLoading, PageHeader } from '@base';
 import { CentersList } from '@/components/centers';
 
-import { getCenters } from '../services';
+import { getCenters, registerForCenter } from '../services';
 
 const inputClass = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 const labelClass = 'block text-gray-700 text-sm font-bold mb-2';
@@ -75,11 +79,16 @@ const labelClass = 'block text-gray-700 text-sm font-bold mb-2';
 const { commit, getters } = useStore();
 
 const areas = ref([]);
+const center = ref(null);
 const centers = ref([]);
 const initialUser = getters.user.email ? { ...getters.user } : {};
 const isOpen = ref(false);
 const loading = ref(true);
+const submitting = ref(false);
 const user = ref(initialUser);
+
+const $toast = useToast();
+console.log('$toast => ', $toast);
 
 const getAllCenters = async () => {
   const response = await getCenters();
@@ -93,7 +102,7 @@ const getAllCenters = async () => {
     if (index > -1) {
       areaData[index].availableSpots += center.maxCapacity - center.registeredCount;
     } else {
-      areaData.push({ area: center.area, availableSpots: center.maxCapacity - center.registeredCount });
+      areaData.push({ area: center.area, availableSpots: center.maxCapacity - center.registeredCount, id: center.id });
     }
   }
 
@@ -101,9 +110,27 @@ const getAllCenters = async () => {
   loading.value = false;
 };
 
-const registerUser = () => {
-  commit('setUserInfo', { ...user.value });
-  setIsOpen(false);
+const handleCenterClick = (payload) => {
+  center.value = payload;
+  setIsOpen(true);
+};
+
+const registerUser = async () => {
+  try {
+    submitting.value = true;
+    await registerForCenter(center.value.id, user.value);
+
+    commit('setUserInfo', { ...user.value });
+    submitting.value = true;
+    setIsOpen(false);
+    $toast.success("You've been successfully registered.");
+  } catch (e) {
+    console.log('Error => ', e);
+    submitting.value = false;
+    $toast.error(e.message ? e.message : 'An error occured, please try again or message us at info@thewaterbrook.com.', {
+      toastClassName: "toast-class-error"
+    });
+  }
 };
 
 const setIsOpen = (value) => {
