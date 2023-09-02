@@ -10,7 +10,10 @@
     <div v-if="loading" class="w-full flex justify-center p-20">
       <DataLoading />
     </div>
-    <centers-list :centers="areas" @onSelect="handleCenterClick" />
+    <centers-list v-else-if="!loading && areas.length > 0" :centers="areas" @onSelect="handleCenterClick" />
+    <div v-else class="w-full p-4 md:p-10 text-center">
+      <p class="mx-auto text-xl text-slate-100 max-w-lg">There are no one gospel centers available atm, please check back later or leave your details and we'll get back to you.</p>
+    </div>
 
     <div
       :class="[

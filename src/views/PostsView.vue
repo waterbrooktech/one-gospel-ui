@@ -4,7 +4,10 @@
     <div v-if="loading" class="w-full flex justify-center p-20">
       <DataLoading />
     </div>
-    <PostsList v-else :posts="posts" />
+    <PostsList v-else-if="!loading && posts.length > 0" :posts="posts" />
+    <div v-else class="w-full p-4 md:p-10 text-center">
+      <p class="mx-auto text-xl text-slate-100 max-w-lg">There is no new notification at this time, please check back later or leave your details and we'll get back to you.</p>
+    </div>
   </main>
 </template>
 
