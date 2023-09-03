@@ -13,6 +13,7 @@
       v-for="(post, index) in posts"
       :key="post._id"
       :class="(index % 2 === 0 ? 'md:-rotate-3 md:-translate-y-3' : 'md:rotate-3 md:translate-y-3')"
+      :link="post.link"
       :message="post.message"
       :title="post.title" />
   </div>
