@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col justify-center h-screen relative">
+  <main class="flex flex-col justify-center relative overflow-y-scroll pt-4 lg:h-screen lg:pt-0">
     <div class="mb-2 text-center">
       <router-link class="hover:bg-transparent" to="/"><button class="text-white mb-4">Go Back</button></router-link>
     </div>
