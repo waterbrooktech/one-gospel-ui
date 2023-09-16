@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import AddPostView from '../views/AddPostView.vue'
 import HomeView from '../views/HomeView.vue'
 import OneGospelView from '../views/OneGospelView.vue'
 import PostsView from '../views/PostsView.vue'
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/one-gospel',
       name: 'one gospel',
       component: OneGospelView
+    },
+    {
+      path: '/add-post',
+      name: 'add post',
+      component: AddPostView
     },
     {
       path: '/about',

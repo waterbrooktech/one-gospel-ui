@@ -1,5 +1,5 @@
 <template>
-  <main class="p-10 h-screen">
+  <main class="p-10 lg:h-screen">
     <PostHeader class="mb-20" />
     <div v-if="loading" class="w-full flex justify-center p-20">
       <DataLoading />

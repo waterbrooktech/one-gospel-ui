@@ -17,12 +17,12 @@
 
     <div
       :class="[
-        'fixed flex flex-col justify-center items-center h-full w-full max-w-7xl backdrop-blur-sm bg-opacity-30 transition-all duration-200 ease-in-out',
+        'fixed top-0 lg:flex justify-center lg:items-center h-full lg:h-full w-full max-w-7xl backdrop-blur-sm bg-opacity-30 transition-all duration-200 ease-in-out',
         {
           'invisible': !isOpen
         }
       ]">
-      <div class="bg-white rounded w-full p-4 max-w-xs md:max-w-md">
+      <div class="bg-white rounded w-full h-full lg:h-auto p-4 overflow-y-scroll md:max-w-md">
         <h4 class="font-bold text-center text-black text-xl">Great! Let&rsquo;s get your details </h4>
         <p class="text-center text-gray-500 text-xs mb-4">
           Why do we need it? Good question, we&rsquo;d like to send you all the information you'll need to get there :)
@@ -129,9 +129,9 @@ const registerUser = async () => {
 
     getAllCenters();
   } catch (e) {
-    console.log('Error => ', e);
     submitting.value = false;
-    $toast.error(e.message ? e.message : 'An error occured, please try again or message us at info@thewaterbrook.com.', {
+    const messageError = e.response.data ?? undefined;
+    $toast.error(messageError ? messageError.message : 'An error occured, please try again or message us at info@thewaterbrook.com.', {
       toastClassName: "toast-class-error"
     });
   }
